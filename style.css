@@ -1,0 +1,1513 @@
+/* ==========================================================================
+   DFS – Dungeon of Forbidden Steps
+   Primary Art Direction & Styling
+   ========================================================================== */
+
+:root {
+    /* Color Palette - Handcrafted Dark Magical Hedge-Maze Aesthetic */
+    --bg-darkest: #040906;
+    --bg-dark-green: #08140c;
+    --bg-surface: #0e1e14;
+    --bg-surface-raised: #142a1c;
+    
+    /* Hedge Greens */
+    --hedge-shadow: #020703;
+    --hedge-dark: #091a10;
+    --hedge-moss: #183e25;
+    --hedge-emerald: #296846;
+    --hedge-leaf-highlight: #3c865c;
+    
+    /* Stone & Path Greys */
+    --stone-dark: #1a241f;
+    --stone-mid: #2d3b34;
+    --stone-light: #4c5d54;
+    --stone-text: #8c9e94;
+
+    /* Accent & Lighting */
+    --gold-muted: #b89843;
+    --gold-bright: #e5c158;
+    --gold-glow: rgba(229, 193, 88, 0.25);
+    
+    --torch-amber: #ff9d00;
+    --torch-core: #ffe285;
+    --torch-glow: rgba(255, 140, 0, 0.28);
+    
+    --magic-pale: #7de0a8;
+    --magic-glow: rgba(125, 224, 168, 0.2);
+
+    /* Typography */
+    --font-title: 'Cinzel', serif;
+    --font-body: 'Plus Jakarta Sans', -apple-system, sans-serif;
+    --font-mono: 'Fira Code', monospace;
+}
+
+/* Reset & Base Layout */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: var(--bg-darkest);
+    color: #d8e5dc;
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Container */
+.game-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: radial-gradient(circle at 50% 50%, var(--bg-dark-green) 0%, var(--bg-darkest) 100%);
+}
+
+/* ==========================================================================
+   SCREENS & TRANSITIONS
+   ========================================================================== */
+.screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+    z-index: 10;
+}
+
+.screen-hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* ==========================================================================
+   SCREEN 1: TITLE SCREEN (MENU)
+   ========================================================================== */
+.title-bg-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.menu-overlay {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 3rem 2rem;
+    background: radial-gradient(circle at 50% 40%, rgba(4, 9, 6, 0.35) 0%, rgba(2, 7, 3, 0.85) 85%);
+}
+
+.title-header {
+    text-align: center;
+    max-width: 800px;
+    margin-top: 2rem;
+}
+
+.magical-badge {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    color: var(--gold-muted);
+    background: rgba(14, 30, 20, 0.7);
+    border: 1px solid rgba(184, 152, 67, 0.3);
+    padding: 0.35rem 1.2rem;
+    margin-bottom: 1.2rem;
+    border-radius: 2px;
+    text-transform: uppercase;
+}
+
+.main-title {
+    font-family: var(--font-title);
+    font-size: 3.8rem;
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: 0.05em;
+    color: #f0f7f2;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.9), 0 0 30px var(--magic-glow);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.title-dfs {
+    font-size: 4.8rem;
+    color: var(--gold-bright);
+    letter-spacing: 0.15em;
+    background: linear-gradient(180deg, #fff7d6 0%, var(--gold-bright) 60%, var(--gold-muted) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 15px rgba(229, 193, 88, 0.3));
+}
+
+.title-subname {
+    font-size: 2.2rem;
+    font-weight: 600;
+    color: #c0d8cb;
+    margin-top: -0.2rem;
+}
+
+.title-subtitle {
+    font-family: var(--font-title);
+    font-size: 1.25rem;
+    color: var(--stone-text);
+    letter-spacing: 0.15em;
+    margin-top: 0.8rem;
+    text-transform: uppercase;
+}
+
+.title-divider {
+    width: 140px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent 0%, var(--gold-muted) 50%, transparent 100%);
+    margin: 1.5rem auto 0 auto;
+}
+
+.menu-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2rem;
+    margin-bottom: 2rem;
+}
+
+.menu-secondary-row {
+    display: flex;
+    gap: 1rem;
+}
+
+.menu-footer {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1000px;
+    font-size: 0.85rem;
+    color: var(--stone-text);
+    border-top: 1px solid rgba(76, 93, 84, 0.3);
+    padding-top: 1rem;
+}
+
+.menu-footer kbd {
+    background: var(--bg-surface-raised);
+    border: 1px solid var(--stone-mid);
+    color: var(--gold-bright);
+    padding: 0.15rem 0.4rem;
+    border-radius: 3px;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    margin: 0 0.15rem;
+}
+
+.mute-toggle {
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+.mute-toggle:hover {
+    color: var(--gold-bright);
+}
+
+/* ==========================================================================
+   BUTTONS (Restrained, Ancient Dark Fantasy Style)
+   ========================================================================== */
+.btn {
+    font-family: var(--font-title);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    border-radius: 3px;
+}
+
+.btn-primary {
+    font-size: 1.2rem;
+    padding: 1.1rem 2.8rem;
+    color: #05120a;
+    background: linear-gradient(180deg, #eed588 0%, var(--gold-bright) 45%, var(--gold-muted) 100%);
+    border: 1px solid #ffea9f;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7), 0 0 20px var(--gold-glow);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.8), 0 0 30px rgba(229, 193, 88, 0.45);
+    background: linear-gradient(180deg, #fff0aa 0%, #edd173 45%, #cfa63a 100%);
+}
+
+.btn-primary:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
+}
+
+.btn-glow::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+.btn-glow:hover::after {
+    opacity: 1;
+}
+
+.btn-secondary {
+    font-size: 0.95rem;
+    padding: 0.8rem 1.6rem;
+    color: #c5d8cc;
+    background: rgba(14, 30, 20, 0.8);
+    border: 1px solid var(--stone-mid);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.btn-secondary:hover {
+    color: #ffffff;
+    border-color: var(--gold-muted);
+    background: var(--bg-surface-raised);
+}
+
+.btn-medium {
+    font-size: 1.05rem;
+    padding: 0.9rem 2.2rem;
+}
+
+.btn-large {
+    font-size: 1.15rem;
+    padding: 1.05rem 2.5rem;
+    width: 100%;
+    max-width: 450px;
+}
+
+.btn-ghost {
+    background: transparent;
+    border: 1px dashed var(--stone-mid);
+    color: var(--stone-text);
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+}
+.btn-ghost:hover {
+    border-color: var(--gold-muted);
+    color: var(--gold-bright);
+}
+
+/* ==========================================================================
+   SCREEN 2: STORY SCREEN
+   ========================================================================== */
+.story-backdrop, .tutorial-backdrop {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(8, 20, 12, 0.92) 0%, rgba(2, 7, 3, 0.97) 100%);
+    z-index: 1;
+}
+
+.story-card {
+    position: relative;
+    z-index: 2;
+    margin: auto;
+    width: 90%;
+    max-width: 680px;
+    background: linear-gradient(180deg, rgba(14, 30, 20, 0.95) 0%, rgba(8, 20, 12, 0.98) 100%);
+    border: 1px solid var(--stone-mid);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), 0 0 1px var(--gold-muted);
+    padding: 2.5rem 3rem;
+    border-radius: 4px;
+}
+
+.story-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.story-scroll-icon {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    filter: drop-shadow(0 0 8px rgba(229, 193, 88, 0.3));
+}
+
+.story-title {
+    font-family: var(--font-title);
+    font-size: 1.8rem;
+    color: var(--gold-bright);
+    letter-spacing: 0.05em;
+}
+
+.story-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: #c9dad0;
+    text-align: center;
+}
+
+.story-paragraph.emphasis {
+    font-family: var(--font-title);
+    font-size: 1.25rem;
+    color: #ffffff;
+}
+
+.story-paragraph.highlight-warning {
+    color: var(--torch-core);
+}
+
+.story-callout {
+    margin: 1.5rem 0;
+    padding: 1.4rem;
+    background: rgba(4, 13, 7, 0.7);
+    border-left: 3px solid var(--gold-muted);
+    border-right: 3px solid var(--gold-muted);
+    text-align: center;
+}
+
+.callout-label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: var(--stone-text);
+    display: block;
+    margin-bottom: 0.4rem;
+}
+
+.callout-headline {
+    font-family: var(--font-title);
+    font-size: 1.6rem;
+    color: var(--gold-bright);
+    letter-spacing: 0.1em;
+    margin: 0.4rem 0;
+}
+
+.callout-sub {
+    font-size: 0.95rem;
+    color: var(--magic-pale);
+    font-style: italic;
+}
+
+.story-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+/* ==========================================================================
+   SCREEN 3: MINI DFS TUTORIAL
+   ========================================================================== */
+.tutorial-card {
+    position: relative;
+    z-index: 2;
+    margin: auto;
+    width: 94%;
+    max-width: 960px;
+    background: linear-gradient(180deg, rgba(14, 30, 20, 0.96) 0%, rgba(8, 20, 12, 0.98) 100%);
+    border: 1px solid var(--stone-mid);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.85);
+    padding: 2rem;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.tutorial-top-bar {
+    text-align: center;
+}
+.tutorial-badge {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    color: var(--gold-muted);
+    margin-bottom: 0.3rem;
+}
+.tutorial-top-bar h2 {
+    font-family: var(--font-title);
+    font-size: 1.6rem;
+    color: #ffffff;
+}
+
+.tutorial-body {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.tutorial-canvas-wrapper {
+    background: rgba(4, 9, 6, 0.9);
+    border: 1px solid var(--stone-mid);
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#tutorial-graph-canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.tutorial-caption {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: rgba(10, 24, 16, 0.9);
+    border-top: 1px solid var(--stone-mid);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--gold-bright);
+    text-align: center;
+}
+
+.tutorial-notes {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.note-box {
+    background: rgba(4, 13, 7, 0.7);
+    border-left: 3px solid var(--hedge-emerald);
+    padding: 1rem 1.2rem;
+    border-radius: 0 4px 4px 0;
+}
+.note-box h4 {
+    font-family: var(--font-title);
+    font-size: 0.85rem;
+    color: var(--stone-text);
+    letter-spacing: 0.1em;
+    margin-bottom: 0.3rem;
+}
+.note-box p {
+    font-size: 0.95rem;
+    color: #d8e5dc;
+}
+.note-box strong {
+    color: var(--gold-bright);
+}
+
+.tutorial-footer {
+    display: flex;
+    justify-content: center;
+    margin-top: 0.5rem;
+}
+
+/* ==========================================================================
+   SCREEN 4: PLAYING GAME INTERFACE
+   ========================================================================== */
+#screen-playing {
+    background: var(--bg-darkest);
+    display: flex;
+    flex-direction: column;
+}
+
+/* HUD Top Bar */
+.hud-top-bar {
+    height: 52px;
+    background: linear-gradient(180deg, rgba(14, 30, 20, 0.95) 0%, rgba(8, 20, 12, 0.98) 100%);
+    border-bottom: 1px solid var(--stone-mid);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.5rem;
+    z-index: 20;
+}
+
+.hud-title-zone {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--font-title);
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--gold-bright);
+    letter-spacing: 0.05em;
+}
+
+.hud-status-zone {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.hud-stat-pill {
+    font-size: 0.85rem;
+    background: rgba(4, 9, 6, 0.6);
+    border: 1px solid var(--stone-dark);
+    padding: 0.25rem 0.8rem;
+    border-radius: 3px;
+    display: flex;
+    gap: 0.5rem;
+}
+.stat-label {
+    color: var(--stone-text);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+}
+.stat-value {
+    font-weight: 600;
+}
+.text-gold { color: var(--gold-bright); }
+.text-emerald { color: var(--magic-pale); }
+
+.hud-controls-zone {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-hud {
+    background: rgba(14, 30, 20, 0.8);
+    border: 1px solid var(--stone-mid);
+    color: var(--stone-text);
+    padding: 0.35rem 0.8rem;
+    font-size: 0.8rem;
+    border-radius: 3px;
+}
+.btn-hud:hover {
+    color: #ffffff;
+    border-color: var(--gold-muted);
+}
+
+/* MAIN GAME WORKSPACE LAYOUT */
+.game-workspace {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    height: calc(100vh - 52px - 36px);
+    overflow: hidden;
+    position: relative;
+}
+
+/* Central Maze Canvas Container */
+.maze-canvas-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: #020603;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+#maze-canvas {
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.9);
+}
+
+.maze-overlay-hint {
+    position: absolute;
+    top: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(8, 20, 12, 0.85);
+    border: 1px solid var(--stone-mid);
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    color: var(--stone-text);
+    pointer-events: none;
+    opacity: 0.8;
+    transition: opacity 0.5s ease;
+}
+
+/* Note: .dfs-event-banner and child elements are consolidated under Central Event Cue Banner Overlay section below */
+
+/* RIGHT SIDEBAR: ENCHANTED FIELD JOURNAL */
+.journal-sidebar {
+    background: linear-gradient(180deg, rgba(11, 24, 16, 0.98) 0%, rgba(6, 14, 9, 0.99) 100%);
+    border-left: 1px solid var(--stone-mid);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.2rem;
+    overflow-y: auto;
+    box-shadow: -5px 0 25px rgba(0, 0, 0, 0.7);
+}
+
+.journal-header {
+    text-align: center;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid var(--stone-mid);
+}
+
+.journal-feather {
+    font-size: 1.4rem;
+    margin-bottom: 0.2rem;
+}
+
+.journal-title {
+    font-family: var(--font-title);
+    font-size: 1.15rem;
+    color: var(--gold-bright);
+    letter-spacing: 0.08em;
+}
+
+.journal-subtitle {
+    font-size: 0.75rem;
+    font-family: var(--font-mono);
+    color: var(--stone-text);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+}
+
+.journal-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.journal-section.flex-expand {
+    flex: 1;
+    min-height: 140px;
+}
+
+.section-title-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--font-title);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    color: var(--stone-text);
+}
+
+.section-badge, .section-count {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--gold-muted);
+    background: rgba(4, 9, 6, 0.8);
+    padding: 0.15rem 0.4rem;
+    border-radius: 2px;
+}
+
+.journal-card-box {
+    background: rgba(4, 9, 6, 0.75);
+    border: 1px solid var(--stone-dark);
+    padding: 0.9rem;
+    border-radius: 3px;
+}
+
+.graph-tracker-box {
+    background: rgba(3, 10, 6, 0.85);
+    border: 1px solid var(--stone-mid);
+    border-radius: 4px;
+    padding: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.8);
+}
+
+#graph-tracker-canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 210px;
+    border-radius: 3px;
+}
+
+.journey-graph-wrapper {
+    width: 100%;
+    margin-bottom: 1rem;
+    background: rgba(3, 10, 6, 0.85);
+    border: 1px solid var(--stone-mid);
+    border-radius: 4px;
+    padding: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+}
+
+#journey-graph-canvas {
+    display: block;
+    width: 100%;
+    max-width: 600px;
+    height: auto;
+    border-radius: 3px;
+}
+
+.journal-placeholder-content {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.placeholder-icon {
+    font-size: 1.5rem;
+    opacity: 0.7;
+}
+
+.placeholder-text {
+    font-size: 0.8rem;
+    color: var(--stone-text);
+    line-height: 1.4;
+}
+
+.node-network-mini {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    margin-top: 0.2rem;
+}
+.mini-node {
+    padding: 0.15rem 0.35rem;
+    border-radius: 2px;
+}
+.mini-node.node-active {
+    background: var(--gold-muted);
+    color: #040906;
+    font-weight: 700;
+}
+.mini-node.node-unvisited {
+    background: var(--stone-dark);
+    color: var(--stone-text);
+}
+.mini-arrow {
+    color: var(--stone-mid);
+}
+
+.log-box {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    overflow-y: auto;
+    max-height: 180px;
+    font-size: 0.8rem;
+}
+
+.log-entry {
+    display: flex;
+    gap: 0.6rem;
+    line-height: 1.35;
+    border-bottom: 1px solid rgba(45, 59, 52, 0.4);
+    padding-bottom: 0.4rem;
+}
+.log-time {
+    font-family: var(--font-mono);
+    color: var(--gold-muted);
+    font-size: 0.72rem;
+}
+.log-msg {
+    color: #b5c7bc;
+}
+.log-entry-hint .log-msg {
+    color: var(--magic-pale);
+}
+
+.nodes-discovered-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.4rem;
+}
+
+.node-chip {
+    background: rgba(4, 9, 6, 0.8);
+    border: 1px solid var(--stone-dark);
+    padding: 0.35rem 0.2rem;
+    text-align: center;
+    border-radius: 2px;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--stone-text);
+}
+.node-chip.discovered {
+    border-color: var(--hedge-emerald);
+    color: var(--magic-pale);
+    background: rgba(24, 62, 37, 0.4);
+}
+.node-chip.current {
+    border-color: var(--gold-bright);
+    color: var(--gold-bright);
+    background: rgba(184, 152, 67, 0.25);
+    font-weight: 700;
+}
+
+/* HUD Bottom Bar */
+.hud-bottom-bar {
+    height: 36px;
+    background: rgba(4, 9, 6, 0.95);
+    border-top: 1px solid var(--stone-mid);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.5rem;
+    font-size: 0.8rem;
+    z-index: 20;
+}
+
+.bottom-info-left {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--stone-text);
+}
+
+.bottom-info-right {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--gold-bright);
+}
+
+/* ==========================================================================
+   MODAL DIALOG
+   ========================================================================== */
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(2, 7, 3, 0.85);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.3s ease;
+}
+.modal-hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.modal-card {
+    width: 90%;
+    max-width: 520px;
+    background: linear-gradient(180deg, rgba(14, 30, 20, 0.98) 0%, rgba(8, 20, 12, 0.99) 100%);
+    border: 1px solid var(--gold-muted);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9), 0 0 20px var(--gold-glow);
+    padding: 2rem;
+    border-radius: 4px;
+    position: relative;
+}
+
+.modal-close-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1.2rem;
+    background: transparent;
+    border: none;
+    color: var(--stone-text);
+    font-size: 1.6rem;
+    cursor: pointer;
+}
+.modal-close-btn:hover { color: #ffffff; }
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1.2rem;
+    border-bottom: 1px solid var(--stone-mid);
+    padding-bottom: 0.8rem;
+}
+.modal-header h3 {
+    font-family: var(--font-title);
+    font-size: 1.4rem;
+    color: var(--gold-bright);
+}
+
+.modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    font-size: 0.95rem;
+    color: #c9dad0;
+}
+.modal-body h4 {
+    font-family: var(--font-title);
+    color: var(--gold-bright);
+    margin-top: 0.4rem;
+}
+
+.modal-footer {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* ==========================================================================
+   DFS STACK & PHASE 2 TRACKER STYLING
+   ========================================================================== */
+.dfs-stack-visual {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.stack-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--stone-text);
+    border-bottom: 1px dashed var(--stone-mid);
+    padding-bottom: 0.3rem;
+}
+
+.stack-depth {
+    color: var(--gold-bright);
+    font-weight: bold;
+}
+
+.stack-items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    max-height: 160px;
+    overflow-y: auto;
+}
+
+.stack-item {
+    background: rgba(4, 13, 7, 0.8);
+    border: 1px solid var(--stone-dark);
+    padding: 0.35rem 0.6rem;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+}
+
+.stack-item.stack-top {
+    border-color: var(--gold-bright);
+    background: rgba(184, 152, 67, 0.2);
+    box-shadow: 0 0 10px rgba(229, 193, 88, 0.2);
+}
+
+.stack-index {
+    color: var(--stone-text);
+    font-size: 0.7rem;
+    width: 14px;
+}
+
+.stack-node-id {
+    color: var(--gold-bright);
+    font-weight: bold;
+}
+
+.stack-node-name {
+    color: #c9dad0;
+    font-size: 0.75rem;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.stack-badge-top {
+    background: var(--gold-bright);
+    color: #040906;
+    font-size: 0.65rem;
+    font-weight: bold;
+    padding: 0.1rem 0.35rem;
+    border-radius: 2px;
+}
+
+/* Node Chip Matrix State Colors */
+.node-chip.visited {
+    border-color: var(--hedge-emerald);
+    color: var(--magic-pale);
+    background: rgba(24, 62, 37, 0.4);
+}
+.node-chip.current {
+    border-color: var(--gold-bright);
+    color: var(--gold-bright);
+    background: rgba(184, 152, 67, 0.3);
+    font-weight: 700;
+    box-shadow: 0 0 8px rgba(229, 193, 88, 0.3);
+}
+.node-chip.dead-end {
+    border-color: var(--dead-end-red, #b83232);
+    color: #ff7b7b;
+    background: rgba(184, 50, 50, 0.25);
+}
+.node-chip.target {
+    border-color: var(--gold-bright);
+    color: #ffffff;
+    background: linear-gradient(135deg, var(--gold-muted) 0%, var(--gold-bright) 100%);
+    font-weight: 700;
+}
+
+/* Event Log Colors */
+.log-entry-warning .log-msg { color: #ff7b7b; font-weight: 600; }
+.log-entry-success .log-msg { color: var(--gold-bright); font-weight: 700; }
+.log-entry-hint .log-msg { color: var(--magic-pale); }
+
+/* Central Event Cue Banner Overlay */
+.dfs-event-banner {
+    position: absolute;
+    top: 1.2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(8, 20, 12, 0.94);
+    border: 1px solid var(--gold-muted);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8), 0 0 15px var(--gold-glow);
+    padding: 0.5rem 1.4rem;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    z-index: 50;
+    max-width: 420px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0.4s ease, transform 0.4s ease;
+    pointer-events: none;
+}
+
+.dfs-event-banner.banner-visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
+.banner-icon { font-size: 1.2rem; }
+.banner-title {
+    font-family: var(--font-title);
+    font-size: 0.95rem;
+    color: var(--gold-bright);
+    letter-spacing: 0.08em;
+}
+.banner-text {
+    font-size: 0.85rem;
+    color: #c9dad0;
+}
+
+/* ==========================================================================
+   DFS IN ACTION CONTEXTUAL TEACHING CARD
+   ========================================================================== */
+.dfs-in-action-card {
+    position: absolute;
+    top: 1.2rem;
+    right: 1.5rem;
+    width: min(300px, 28vw);
+    max-width: 300px;
+    height: auto;
+    max-height: 160px;
+    overflow: hidden;
+    background: linear-gradient(180deg, rgba(14, 30, 20, 0.96) 0%, rgba(6, 14, 9, 0.98) 100%);
+    border: 1.5px solid var(--gold-bright);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.85), 0 0 20px rgba(229, 193, 88, 0.3);
+    border-radius: 4px;
+    padding: 10px 12px;
+    z-index: 60;
+    pointer-events: none;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    transition: opacity 0.4s ease, visibility 0.4s ease, transform 0.4s ease;
+}
+
+.dfs-in-action-card.card-hidden {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-15px);
+}
+
+.card-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    margin-bottom: 0.6rem;
+    border-bottom: 1px solid var(--stone-mid);
+    padding-bottom: 0.4rem;
+}
+
+.card-badge {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--gold-muted);
+}
+
+.card-title {
+    font-family: var(--font-title);
+    font-size: 1.1rem;
+    color: var(--gold-bright);
+    letter-spacing: 0.08em;
+}
+
+.card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.card-desc {
+    font-size: 0.88rem;
+    line-height: 1.4;
+    color: #d8e5dc;
+}
+
+.card-detail-box {
+    background: rgba(4, 9, 6, 0.8);
+    border: 1px solid var(--stone-dark);
+    padding: 0.4rem 0.6rem;
+    border-radius: 3px;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+}
+
+.detail-label {
+    color: var(--stone-text);
+}
+
+.detail-val {
+    color: var(--gold-bright);
+    font-weight: bold;
+}
+
+.victory-actions-secondary {
+    display: flex;
+    justify-content: center;
+    gap: 1.2rem;
+    margin-top: 0.8rem;
+}
+
+/* ==========================================================================
+   PHASE 3: TIMER & GAME OVER STYLING
+   ========================================================================== */
+.text-red { color: #ff6b6b; }
+
+.timer-warning {
+    color: #ff9d00 !important;
+    animation: timerPulseAmber 1.2s infinite ease-in-out;
+}
+
+.timer-critical {
+    color: #ff4d4d !important;
+    animation: timerPulseRed 0.6s infinite ease-in-out;
+}
+
+@keyframes timerPulseAmber {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+@keyframes timerPulseRed {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(1.08); }
+}
+
+/* Game Over Overlay Styling */
+.gameover-card {
+    border-color: var(--dead-end-red, #b83232) !important;
+    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.95), 0 0 30px rgba(184, 50, 50, 0.4) !important;
+}
+
+.gameover-header h3 {
+    color: #ff6b6b !important;
+    font-size: 1.8rem;
+    letter-spacing: 0.08em;
+}
+
+.gameover-subtext {
+    font-size: 1.05rem;
+    color: #e5c9c9;
+    margin-bottom: 1.2rem;
+    line-height: 1.5;
+}
+
+.gameover-stat-summary {
+    background: rgba(4, 9, 6, 0.85);
+    border: 1px solid var(--stone-mid);
+    border-radius: 4px;
+    padding: 0.8rem 1.2rem;
+    margin: 1rem 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    text-align: left;
+}
+
+.stat-item-label { color: var(--stone-text); }
+.stat-item-val { color: var(--gold-bright); font-weight: bold; }
+
+/* ==========================================================================
+   PHASE 4: VICTORY & DFS SUMMARY SCREEN STYLING
+   ========================================================================== */
+.victory-scroll-wrapper {
+    position: relative;
+    z-index: 5;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    padding: 3rem 1.5rem;
+    display: flex;
+    justify-content: center;
+}
+
+.victory-card {
+    width: 100%;
+    max-width: 860px;
+    background: linear-gradient(180deg, rgba(14, 30, 20, 0.98) 0%, rgba(6, 14, 9, 0.99) 100%);
+    border: 1px solid var(--gold-bright);
+    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.95), 0 0 30px var(--gold-glow);
+    padding: 2.5rem 3rem;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin: auto 0;
+}
+
+.victory-header {
+    text-align: center;
+}
+
+.victory-trophy-icon {
+    font-size: 3rem;
+    margin-bottom: 0.4rem;
+    filter: drop-shadow(0 0 15px rgba(229, 193, 88, 0.5));
+}
+
+.victory-title {
+    font-family: var(--font-title);
+    font-size: 2.4rem;
+    color: var(--gold-bright);
+    letter-spacing: 0.08em;
+}
+
+.victory-subtitle {
+    font-size: 1rem;
+    color: var(--stone-text);
+    font-family: var(--font-mono);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-top: 0.3rem;
+}
+
+.victory-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.victory-section-title {
+    font-family: var(--font-title);
+    font-size: 0.95rem;
+    color: var(--gold-bright);
+    letter-spacing: 0.12em;
+    border-bottom: 1px solid var(--stone-mid);
+    padding-bottom: 0.4rem;
+}
+
+/* Run Statistics Grid */
+.victory-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+}
+
+.victory-stat-box {
+    background: rgba(4, 9, 6, 0.8);
+    border: 1px solid var(--stone-mid);
+    padding: 1rem 0.8rem;
+    border-radius: 3px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.vstat-label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--stone-text);
+}
+
+.vstat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+/* Recorded DFS Traversal Sequence Flow Chips */
+.traversal-flow-container {
+    background: rgba(4, 9, 6, 0.85);
+    border: 1px solid var(--stone-dark);
+    padding: 1.2rem;
+    border-radius: 4px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    max-height: 220px;
+    overflow-y: auto;
+}
+
+.tflow-chip {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 3px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.tflow-chip.forward {
+    background: rgba(24, 62, 37, 0.6);
+    border: 1px solid var(--hedge-emerald);
+    color: var(--magic-pale);
+}
+
+.tflow-chip.backtrack {
+    background: rgba(180, 80, 20, 0.4);
+    border: 1px solid var(--torch-amber);
+    color: #ffb870;
+}
+
+.tflow-chip.dead-end {
+    background: rgba(184, 50, 50, 0.5);
+    border: 1px solid var(--dead-end-red);
+    color: #ff8585;
+}
+
+.tflow-chip.target {
+    background: var(--gold-bright);
+    color: #040906;
+    font-weight: bold;
+}
+
+.tflow-arrow {
+    color: var(--stone-text);
+    font-size: 0.85rem;
+}
+
+/* Learning Walkthrough Steps */
+.learning-steps-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+}
+
+.learning-step-item {
+    background: rgba(4, 13, 7, 0.7);
+    border-left: 3px solid var(--hedge-emerald);
+    padding: 0.8rem 1rem;
+    border-radius: 0 4px 4px 0;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.step-num {
+    background: var(--hedge-moss);
+    color: var(--gold-bright);
+    font-family: var(--font-title);
+    font-weight: bold;
+    font-size: 0.95rem;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.step-desc {
+    font-size: 0.92rem;
+    color: #c9dad0;
+    line-height: 1.4;
+}
+
+.step-desc strong {
+    color: var(--gold-bright);
+}
+
+/* Mandatory Algorithmic Lesson Callout */
+.victory-callout-box {
+    background: rgba(20, 40, 25, 0.8);
+    border: 1px solid var(--gold-muted);
+    border-left: 4px solid var(--gold-bright);
+    padding: 1.2rem 1.5rem;
+    border-radius: 4px;
+}
+
+.callout-header {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.5rem;
+}
+
+.callout-icon {
+    font-size: 1.2rem;
+}
+
+.callout-title {
+    font-family: var(--font-title);
+    font-size: 0.95rem;
+    color: var(--gold-bright);
+    letter-spacing: 0.08em;
+}
+
+.callout-body {
+    font-size: 0.92rem;
+    line-height: 1.6;
+    color: #d8e6dd;
+}
+
+.victory-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1.2rem;
+    margin-top: 0.5rem;
+}
+
+@media (max-width: 800px) {
+    .victory-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+
+

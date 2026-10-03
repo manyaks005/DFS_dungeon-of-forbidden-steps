@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DFS – Dungeon of Forbidden Steps | A Magical Maze Algorithm</title>
+    <meta name="description"
+        content="An atmospheric dark fantasy educational browser game teaching Depth First Search (DFS) through physical maze exploration.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="game-container" class="game-container">
+
+        <!-- ========================================== -->
+        <!-- SCREEN 1: TITLE SCREEN (MENU)             -->
+        <!-- ========================================== -->
+        <section id="screen-menu" class="screen screen-active">
+            <canvas id="title-bg-canvas" class="title-bg-canvas"></canvas>
+
+            <div class="menu-overlay">
+                <div class="title-header">
+                    <div class="magical-badge">ALGORITHMIC LABYRINTH</div>
+                    <h1 class="main-title">
+                        <span class="title-dfs">DFS</span>
+                        <span class="title-subname">Dungeon of Forbidden Steps</span>
+                    </h1>
+                    <p class="title-subtitle">A Magical Maze Algorithm</p>
+                    <div class="title-divider"></div>
+                </div>
+
+                <div class="menu-actions">
+                    <button id="btn-enter-maze" class="btn btn-primary btn-glow">
+                        <span class="btn-icon">⚡</span>
+                        <span class="btn-text">ENTER THE MAZE</span>
+                    </button>
+
+                    <div class="menu-secondary-row">
+                        <button id="btn-how-to-play" class="btn btn-secondary">
+                            <span>HOW TO PLAY</span>
+                        </button>
+                        <button id="btn-learn-dfs" class="btn btn-secondary">
+                            <span>LEARN DFS</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="menu-footer">
+                    <span>Use <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> or <kbd>Arrow Keys</kbd> to
+                        explore</span>
+                    <span class="mute-toggle" id="audio-toggle">🔊 Audio: On</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- SCREEN 2: STORY SCREEN (STORY)             -->
+        <!-- ========================================== -->
+        <section id="screen-story" class="screen screen-hidden">
+            <div class="screen-backdrop story-backdrop"></div>
+
+            <div class="story-card">
+                <div class="story-header">
+                    <div class="story-scroll-icon">📜</div>
+                    <h2 class="story-title">The Quest of the Forbidden Path</h2>
+                </div>
+
+                <div class="story-content">
+                    <p class="story-paragraph emphasis">The Forbidden Maze awaits.</p>
+                    <p class="story-paragraph">Somewhere inside lies the magical target — the Relic of Ancients.</p>
+                    <p class="story-paragraph">The paths are connected in strange ways.<br>
+                        Some lead deeper. Some lead nowhere.</p>
+                    <p class="story-paragraph highlight-warning">When you reach a dead end, don’t panic.<br>
+                        Turn back. Try another path.</p>
+                    <div class="story-callout">
+                        <span class="callout-label">THE FORBIDDEN PRINCIPLE</span>
+                        <p class="callout-text">There is a method hidden inside the maze...</p>
+                        <h3 class="callout-headline">DEPTH FIRST SEARCH</h3>
+                        <p class="callout-sub">DFS explores one path deeply before trying another.</p>
+                    </div>
+                </div>
+
+                <div class="story-actions">
+                    <button id="btn-story-continue" class="btn btn-primary btn-medium">
+                        <span>PROCEED TO LESSON →</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- SCREEN 3: MINI DFS TUTORIAL (TUTORIAL)     -->
+        <!-- ========================================== -->
+        <section id="screen-tutorial" class="screen screen-hidden">
+            <div class="screen-backdrop tutorial-backdrop"></div>
+
+            <div class="tutorial-card">
+                <div class="tutorial-top-bar">
+                    <div class="tutorial-badge">PHASE I TUTORIAL</div>
+                    <h2>How Depth First Search (DFS) Operates</h2>
+                </div>
+
+                <div class="tutorial-body">
+                    <!-- Graph animation canvas -->
+                    <div class="tutorial-canvas-wrapper">
+                        <canvas id="tutorial-graph-canvas" width="600" height="340"></canvas>
+                        <div id="tutorial-caption" class="tutorial-caption">
+                            Initializing DFS simulation...
+                        </div>
+                    </div>
+
+                    <!-- Step explanation side card -->
+                    <div class="tutorial-notes">
+                        <div class="note-box">
+                            <h4>KEY PRINCIPLE 1</h4>
+                            <p><strong>DFS goes deeper</strong> before exploring another branch.</p>
+                        </div>
+                        <div class="note-box">
+                            <h4>KEY PRINCIPLE 2</h4>
+                            <p><strong>When no unexplored path remains</strong>, DFS backtracks.</p>
+                        </div>
+                        <div class="tutorial-replay-wrapper">
+                            <button id="btn-replay-tutorial" class="btn btn-small btn-ghost">↻ Replay Visual
+                                Simulation</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tutorial-footer">
+                    <button id="btn-tutorial-understand" class="btn btn-primary btn-glow btn-large">
+                        <span>I UNDERSTAND — ENTER PLAYABLE MAZE</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- SCREEN 4: PLAYING GAME INTERFACE           -->
+        <!-- ========================================== -->
+        <section id="screen-playing" class="screen screen-hidden">
+
+            <!-- TOP HUD BAR -->
+            <header class="hud-top-bar">
+                <div class="hud-title-zone">
+                    <span class="hud-game-icon">🗝️</span>
+                    <span class="hud-game-title">DFS – Dungeon of Forbidden Steps</span>
+                </div>
+
+                <div class="hud-status-zone">
+                    <div class="hud-stat-pill">
+                        <span class="stat-label">TIME:</span>
+                        <span id="hud-timer-display" class="stat-value text-gold">00:45</span>
+                    </div>
+                    <div class="hud-stat-pill">
+                        <span class="stat-label">LOCATION:</span>
+                        <span id="hud-current-node-name" class="stat-value text-gold">Entrance Archway</span>
+                    </div>
+                    <div class="hud-stat-pill">
+                        <span class="stat-label">STATUS:</span>
+                        <span id="hud-exploration-state" class="stat-value text-emerald">Exploring Maze</span>
+                    </div>
+                </div>
+
+                <div class="hud-controls-zone">
+                    <button id="btn-hud-reset" class="btn btn-hud" title="Reset to Start Position">↺ Restart</button>
+                    <button id="btn-hud-menu" class="btn btn-hud" title="Return to Menu">☰ Menu</button>
+                </div>
+            </header>
+
+            <!-- MAIN GAME WORKSPACE (MAZE + JOURNAL SIDEBAR) -->
+            <main class="game-workspace">
+
+                <!-- CENTRAL MAGICAL MAZE CANVAS CONTAINER -->
+                <div class="maze-canvas-container" id="maze-container">
+                    <canvas id="maze-canvas" width="1400" height="1000"></canvas>
+
+                    <div id="maze-overlay-hint" class="maze-overlay-hint">
+                        <span>Use <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> or <kbd>Arrows</kbd> to move</span>
+                    </div>
+
+                    <!-- QUICK EVENT CUE BANNER -->
+                    <div id="dfs-event-banner" class="dfs-event-banner">
+                        <span id="banner-icon" class="banner-icon">📜</span>
+                        <div>
+                            <div id="banner-title" class="banner-title">NEW NODE DISCOVERED</div>
+                            <div id="banner-text" class="banner-text">DFS has reached an unvisited location.</div>
+                        </div>
+                    </div>
+
+                    <!-- DFS IN ACTION CONTEXTUAL TEACHING CARD -->
+                    <div id="dfs-in-action-card" class="dfs-in-action-card card-hidden">
+                        <div class="card-header">
+                            <span class="card-badge">DFS IN ACTION</span>
+                            <span id="dfs-card-concept-title" class="card-title">ROOT NODE</span>
+                        </div>
+                        <div class="card-body">
+                            <p id="dfs-card-concept-desc" class="card-desc">DFS begins traversal at a starting node
+                                called the root.</p>
+                            <div id="dfs-card-dynamic-detail" class="card-detail-box">
+                                <span class="detail-label">CURRENT NODE:</span> <span id="card-curr-node"
+                                    class="detail-val">N0 (START)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RIGHT SIDE: ENCHANTED FIELD JOURNAL & EXPLORATION TRACKER -->
+                <aside class="journal-sidebar">
+                    <div class="journal-header">
+                        <div class="journal-feather">🪶</div>
+                        <h3 class="journal-title">DFS FIELD JOURNAL</h3>
+                        <span class="journal-subtitle">Enchanted Record</span>
+                    </div>
+
+                    <!-- ACTIVE DFS STACK DISPLAY -->
+                    <div class="journal-section">
+                        <div class="section-title-bar">
+                            <span class="section-title">ACTIVE DFS STACK</span>
+                            <span id="stack-depth-badge" class="section-badge">DEPTH: 1</span>
+                        </div>
+                        <div class="journal-card-box">
+                            <div id="dfs-stack-container" class="journal-placeholder-content">
+                                <!-- Populated dynamically -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- JOURNAL LOG / RECENT STEPS -->
+                    <div class="journal-section flex-expand">
+                        <div class="section-title-bar">
+                            <span class="section-title">EXPLORATION LOG</span>
+                            <span class="section-badge">LIVE TRAVERSAL</span>
+                        </div>
+                        <div class="journal-card-box log-box" id="journal-log-container">
+                            <div class="log-entry log-entry-info">
+                                <span class="log-time">00:00</span>
+                                <span class="log-msg">Entered the Forbidden Hedge Maze at the Southern Gates.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- GRAPH ENCHANTED TRACKER -->
+                    <div class="journal-section">
+                        <div class="section-title-bar">
+                            <span class="section-title">DFS GRAPH TRACKER</span>
+                            <span id="journal-node-count" class="section-count">1 / 13</span>
+                        </div>
+                        <div class="graph-tracker-box">
+                            <canvas id="graph-tracker-canvas" width="300" height="210"></canvas>
+                        </div>
+                    </div>
+                </aside>
+            </main>
+
+            <!-- BOTTOM HUD FOOTER -->
+            <footer class="hud-bottom-bar">
+                <div class="bottom-info-left">
+                    <span class="info-icon">💡</span>
+                    <span id="bottom-hint-text">Tip: DFS walks all the way down a branch until it hits a dead end before
+                        backtracking.</span>
+                </div>
+                <div class="bottom-info-right">
+                    <span class="node-meta-tag" id="current-node-details">Near Node: N0 (Entrance)</span>
+                </div>
+            </footer>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- SCREEN 5: VICTORY SCREEN                   -->
+        <!-- ========================================== -->
+        <section id="screen-victory" class="screen screen-hidden">
+            <div class="screen-backdrop story-backdrop"></div>
+
+            <div class="victory-scroll-wrapper">
+                <div class="victory-card">
+                    <div class="victory-header">
+                        <div class="victory-trophy-icon">🏆</div>
+                        <h2 class="victory-title">THE MAZE IS CONQUERED!</h2>
+                        <p class="victory-subtitle">YOU ESCAPED IN TIME — TARGET FOUND</p>
+                    </div>
+
+                    <!-- 1. ACTUAL RUN STATISTICS -->
+                    <div class="victory-section">
+                        <div class="victory-section-title">EXPLORATION RUN STATISTICS</div>
+                        <div class="victory-stats-grid">
+                            <div class="victory-stat-box">
+                                <span class="vstat-label">TIME USED</span>
+                                <span id="vstat-time" class="vstat-value text-gold">0s</span>
+                            </div>
+                            <div class="victory-stat-box">
+                                <span class="vstat-label">NODES VISITED</span>
+                                <span id="vstat-nodes" class="vstat-value text-emerald">0 / 13</span>
+                            </div>
+                            <div class="victory-stat-box">
+                                <span class="vstat-label">DEAD ENDS</span>
+                                <span id="vstat-deadends" class="vstat-value text-gold">0</span>
+                            </div>
+                            <div class="victory-stat-box">
+                                <span class="vstat-label">BACKTRACKS</span>
+                                <span id="vstat-backtracks" class="vstat-value text-emerald">0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- VICTORY ACTION BUTTONS -->
+                    <div class="victory-actions">
+                        <button id="btn-victory-journey" class="btn btn-primary btn-glow btn-medium">
+                            <span>VIEW MY DFS JOURNEY →</span>
+                        </button>
+                        <button id="btn-victory-learn" class="btn btn-secondary btn-medium">
+                            <span>WHAT DID I LEARN?</span>
+                        </button>
+                    </div>
+
+                    <div class="victory-actions-secondary">
+                        <button id="btn-victory-replay" class="btn btn-secondary btn-medium">
+                            <span>↻ PLAY AGAIN</span>
+                        </button>
+                        <button id="btn-victory-menu" class="btn btn-secondary btn-medium">
+                            <span>☰ MAIN MENU</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- SCREEN 6: DEDICATED JOURNEY FLOW SCREEN    -->
+        <!-- ========================================== -->
+        <section id="screen-journey" class="screen screen-hidden">
+            <div class="screen-backdrop story-backdrop"></div>
+
+            <div class="victory-scroll-wrapper">
+                <div class="victory-card">
+                    <div class="victory-header">
+                        <div class="victory-trophy-icon">🗺️</div>
+                        <h2 class="victory-title">YOUR DFS JOURNEY</h2>
+                        <p class="victory-subtitle">Recorded Graph Traversal Sequence</p>
+                    </div>
+
+                    <div class="victory-section">
+                        <div class="victory-section-title">MY DFS TRAVERSAL</div>
+                        <div class="journey-graph-wrapper">
+                            <canvas id="journey-graph-canvas" width="600" height="240"></canvas>
+                        </div>
+                        <div class="traversal-flow-container" id="victory-traversal-sequence">
+                            <!-- Populated dynamically from traversalSequence -->
+                        </div>
+                    </div>
+
+                    <div class="victory-actions">
+                        <button id="btn-journey-learn" class="btn btn-primary btn-glow btn-medium">
+                            <span>PROCEED TO LESSON: WHAT DID YOU LEARN? →</span>
+                        </button>
+                    </div>
+                    <div class="victory-actions-secondary">
+                        <button id="btn-journey-replay" class="btn btn-secondary btn-medium">
+                            <span>↻ PLAY AGAIN</span>
+                        </button>
+                        <button id="btn-journey-menu" class="btn btn-secondary btn-medium">
+                            <span>☰ MAIN MENU</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- SCREEN 7: WHAT DID YOU LEARN? SUMMARY      -->
+        <!-- ========================================== -->
+        <section id="screen-learn-summary" class="screen screen-hidden">
+            <div class="screen-backdrop story-backdrop"></div>
+
+            <div class="victory-scroll-wrapper">
+                <div class="victory-card">
+                    <div class="victory-header">
+                        <div class="victory-trophy-icon">🧠</div>
+                        <h2 class="victory-title">YOU JUST PERFORMED DEPTH FIRST SEARCH</h2>
+                        <p class="victory-subtitle">Algorithm Principles Applied In Your Playthrough</p>
+                    </div>
+
+                    <div class="victory-section">
+                        <div class="victory-section-title">DYNAMIC LEARNING BREAKDOWN</div>
+                        <div class="learning-steps-list" id="learn-summary-list">
+                            <!-- Populated dynamically with real playthrough examples -->
+                        </div>
+                    </div>
+
+                    <!-- CRITICAL ALGORITHMIC LESSON CALLOUT -->
+                    <div class="victory-callout-box">
+                        <div class="callout-header">
+                            <span class="callout-icon">💡</span>
+                            <span class="callout-title">CRITICAL ALGORITHMIC LESSON</span>
+                        </div>
+                        <p class="callout-body">
+                            <strong>DFS does NOT automatically choose the shortest or lowest-cost path.</strong><br>
+                            The route travel times in this game were used purely for gameplay time pressure, not as the
+                            decision-making rule for Depth First Search. DFS explores deeply along branches regardless
+                            of travel cost.
+                        </p>
+                    </div>
+
+                    <div class="victory-actions">
+                        <button id="btn-learn-back" class="btn btn-secondary btn-medium">
+                            <span>← BACK TO MY DFS JOURNEY</span>
+                        </button>
+                        <button id="btn-learn-replay" class="btn btn-primary btn-glow btn-medium">
+                            <span>↻ PLAY AGAIN</span>
+                        </button>
+                        <button id="btn-learn-menu" class="btn btn-secondary btn-medium">
+                            <span>☰ MAIN MENU</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- MODAL: HOW TO PLAY / DFS EXPLANATION       -->
+        <!-- ========================================== -->
+        <div id="modal-info" class="modal-backdrop modal-hidden">
+            <div class="modal-card">
+                <button id="btn-modal-close" class="modal-close-btn">&times;</button>
+                <div class="modal-header">
+                    <div class="modal-icon">📖</div>
+                    <h3>How To Play</h3>
+                </div>
+                <div class="modal-body">
+                    <h4>Gameplay & Controls</h4>
+                    <ul style="text-align:left; line-height:1.6; margin-left: 15px; color: #a8d5b5;">
+                        <li>Use <strong>WASD</strong> or <strong>Arrow Keys</strong> to move your wizard.</li>
+                        <li>Follow the currently unlocked magical path.</li>
+                        <li>Collect the magical keys in the maze.</li>
+                        <li>A Dementor appears when you complete a new dead-end branch.</li>
+                        <li>Backtrack quickly to escape it!</li>
+                        <li>New DFS branches unlock as you progress.</li>
+                        <li>Complete the required exploration and reach the final door before time runs out.</li>
+                        <li>The Dark Lord catches you if the timer reaches zero.</li>
+                        <li>Watch the live graph while you explore.</li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button id="btn-modal-ok" class="btn btn-primary">RETURN TO MENU</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- OVERLAY: GAME OVER (FAILURES)              -->
+        <!-- ========================================== -->
+        <div id="overlay-gameover" class="modal-backdrop modal-hidden">
+            <div class="modal-card gameover-card">
+                <div class="modal-header gameover-header">
+                    <div id="gameover-icon" class="modal-icon">💀</div>
+                    <h3 id="gameover-headline">THE MAZE CLAIMED YOU</h3>
+                </div>
+                <div class="modal-body text-center">
+                    <p id="gameover-subtext" class="gameover-subtext">At a dead end, DFS must backtrack to continue
+                        exploring.</p>
+                    <div class="gameover-stat-summary" id="gameover-stats">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+                <div class="modal-footer gameover-actions">
+                    <button id="btn-gameover-retry" class="btn btn-primary btn-glow">
+                        <span>↻ TRY AGAIN</span>
+                    </button>
+                    <button id="btn-gameover-menu" class="btn btn-secondary">
+                        <span>☰ MAIN MENU</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/dfs.js"></script>
+    <script src="js/maze.js"></script>
+    <script src="js/player.js"></script>
+    <script src="js/tutorial.js"></script>
+    <script src="js/journal.js"></script>
+    <script src="js/game.js"></script>
+</body>
+
+</html>
